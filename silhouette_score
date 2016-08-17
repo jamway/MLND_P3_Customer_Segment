@@ -1,0 +1,35 @@
+from sklearn.mixture import GMM 
+from sklearn.metrics import silhouette_score 
+from sklearn import grid_search
+def silhouette_score_comparison(n_components, reduced_data, pca_samples):
+    clusterer = GMM(n_components=n_components)
+    clusterer.fit(reduced_data)
+
+# TODO: Predict the cluster for each data point
+    preds = clusterer.predict(reduced_data)
+# TODO: Find the cluster centers
+    centers = clusterer.means_
+
+# TODO: Predict the cluster for each transformed sample data point
+    sample_preds = clusterer.predict(pca_samples)
+
+# TODO: Calculate the mean silhouette coefficient for the number of clusters chosen
+    score = silhouette_score(reduced_data, labels=preds)
+    return score
+silhouette_score_dict={}
+
+for i in [2,3,4,5,10,100,400]:
+    silhouette_score_dict[i]=np.round(silhouette_score_comparison(i,reduced_data,pca_samples),4)
+    print "When number of clusters is {}, the silhouette score is {}.".format(i, silhouette_score_dict[i])
+for key, value in silhouette_score_dict.items():
+        if value == max(silhouette_score_dict.values()):
+            n_components = key
+    
+score = silhouette_score_comparison(n_components,reduced_data,pca_samples)
+print "The best score happens with {} clusters and the score is {}.".format(n_components,score)
+clusterer=GMM(n_components)
+clusterer.fit(reduced_data)
+preds = clusterer.predict(reduced_data)
+centers = clusterer.means_
+sample_preds = clusterer.predict(pca_samples)
+    
